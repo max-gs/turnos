@@ -1,0 +1,20 @@
+services:
+  - type: cron
+    name: turnos-prenotami
+    runtime: python
+    schedule: "*/17 * * * *"
+    buildCommand: |
+      pip install -r requirements.txt
+      playwright install --with-deps
+    startCommand: python main.py
+    envVars:
+      - key: GMAIL_USER
+        value: tu-gmail@gmail.com
+      - key: GMAIL_PASS
+        value: tu-clave-app-gmail
+      - key: ALERT_EMAIL
+        value: destinatario@gmail.com
+      - key: PRENOTAMI_USER
+        value: tu-usuario-prenotami
+      - key: PRENOTAMI_PASS
+        value: tu-password-prenotami
