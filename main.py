@@ -4,88 +4,82 @@ import random
 import asyncio
 from playwright.async_api import async_playwright
 import requests
+from dotenv import load_dotenv
 
-# Variables desde entorno
+# Cargar variables de entorno
+load_dotenv()
 USERNAME = os.getenv("USERNAME")
 PASSWORD = os.getenv("PASSWORD")
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+URL_LOGIN = "https://prenotami.esteri.it/"
 
-# URL base
-BASE_URL = "https://prenotami.esteri.it"
+async def revisar_turnos():
+    print("Iniciando revisión de turnos...")
 
-async def enviar_mensaje_telegram(mensaje):
-    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
-        print("No hay configuración de Telegram.")
-        return
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    data = {"chat_id": TELEGRAM_CHAT_ID, "text": mensaje}
-    try:
-        resp = requests.post(url, data=data)
-        if resp.status_code == 200:
-            print("Mensaje enviado por Telegram.")
-        else:
-            print(f"Error enviando Telegram: {resp.text}")
-    except Exception as e:
-        print(f"Exception enviando Telegram: {e}")
-
-async def check_turnos():
-    print("Iniciando Playwright para revisar turnos...")
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)  # headless para no mostrar ventana
+        browser = await p.chromium.launch(headless=True)
         context = await browser.new_context()
         page = await context.new_page()
 
-        # Ir a la página principal
-        await page.goto(BASE_URL)
-
-        # Click en botón "Accedi" para login
-        await page.click("text=Accedi")
-
-        # Completar formulario login
-        await page.fill('input[name="username"]', USERNAME)
-        await page.fill('input[name="password"]', PASSWORD)
-        await page.click('button[type="submit"]')
-
-        # Esperar que cargue la página principal del usuario (quizás check URL o elemento)
-        await page.wait_for_load_state("networkidle")
-
-        # Navegar a sección “Ricostruzione cittadinanza”
-        # (Ajustar selector exacto según página real)
-        await page.goto(f"{BASE_URL}/prenotami/ricostruzione")
-
-        # Esperar que cargue el contenido
-        await page.wait_for_load_state("networkidle")
-
-        # Buscar el botón "Prenota" o "Reservar" que habilita turnos
-        # IMPORTANTE: ajustá el selector según lo que veas en el HTML real
         try:
-            boton = await page.query_selector("button:has-text('Prenota')")
-            if boton:
-                habilitado = await boton.is_enabled()
-                if habilitado:
-                    msg = "¡Turno disponible para reconstrucción de ciudadanía! 🟢"
-                    print(msg)
-                    await enviar_mensaje_telegram(msg)
-                else:
-                    print("No hay turnos disponibles ahora.")
-            else:
-                print("No se encontró el botón de reservar.")
+            await page.goto(URL_LOGIN)
+            await page.click('text=Accedi')
+
+            # Iniciar sesión
+            await page.fill('input[name="email"]', USERNAME)
+            await page.fill('input[name="password"]', PASSWORD)
+            await page.click('button[type="submit"]')
+
+            await page.wait_for_timeout(3000)
+
+            # Navegar a turnos
+            await page.goto("https://prenotami.esteri.it/Services")
+            await page.wait_for_timeout(3000)
+
+            # Buscar el servicio específico
+            servicios = await page.locator("div.card-body").all()
+            encontrado = False
+
+            for servicio in servicios:
+                titulo = await servicio.locator("h5").inner_text()
+                if "Ricostruzione cittadinanza" in titulo:
+                    encontrado = True
+                    botones = await servicio.locator("a.btn").all()
+                    for boton in botones:
+                        texto = await boton.inner_text()
+                        if "Prenota" in texto:
+                            print("🟢 ¡Turno disponible!")
+                            await enviar_telegram("🟢 ¡Hay turno disponible para Ricostruzione cittadinanza!")
+                            break
+                    break
+
+            if not encontrado:
+                print("⚠️ No se encontró el servicio de Ricostruzione cittadinanza.")
+
         except Exception as e:
-            print(f"Error chequeando botón: {e}")
+            print(f"❌ Error: {e}")
 
         await browser.close()
 
-async def main():
-    while True:
-        try:
-            await check_turnos()
-        except Exception as e:
-            print(f"Error en check_turnos: {e}")
-
-        wait_time = random.randint(8*60, 20*60)
-        print(f"Esperando {wait_time // 60} minutos para el próximo chequeo...")
-        await asyncio.sleep(wait_time)  # <-- Aquí el cambio
+async def enviar_telegram(mensaje):
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    data = {
+        "chat_id": TELEGRAM_CHAT_ID,
+        "text": mensaje
+    }
+    try:
+        response = requests.post(url, data=data)
+        print("📨 Mensaje enviado a Telegram")
+    except Exception as e:
+        print(f"❌ Error al enviar Telegram: {e}")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    while True:
+        try:
+            asyncio.run(revisar_turnos())
+        except Exception as e:
+            print(f"❌ Error general: {e}")
+        espera = random.randint(500, 1200)  # espera entre 8 y 20 minutos
+        print(f"⏳ Esperando {espera // 60} minutos...\n")
+        time.sleep(espera)
