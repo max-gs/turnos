@@ -39,6 +39,7 @@ playwright install
 ---
 
 ## Configuración
+
 Crear un archivo .env en la raíz con las siguientes variables:
 
 USERNAME=tu_usuario_en_prenotami
