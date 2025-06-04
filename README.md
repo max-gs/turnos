@@ -12,54 +12,55 @@ Este proyecto es un script en Python que utiliza Playwright para conectarse a [p
 
 ---
 
-### Instalación
+## Instalación
 
 1. Clonar el repositorio:
 
 ```bash
 git clone https://github.com/max-gs/turnos.git
 cd turnos
+Crear un entorno virtual (opcional pero recomendado):
 
-2. Crear un entorno virtual (opcional pero recomendado):
-
+bash
+Copiar
+Editar
 python -m venv venv
 source venv/bin/activate  # Linux/macOS
 venv\Scripts\activate     # Windows
+Instalar dependencias:
 
-
-3. Instalar dependencias:
-
+bash
+Copiar
+Editar
 pip install -r requirements.txt
+Instalar navegadores para Playwright (solo la primera vez):
 
-
-4. Instalar navegadores para Playwright (solo la primera vez):
-
+bash
+Copiar
+Editar
 playwright install
-
----
-
-### Configuración
-
+Configuración
 Crear un archivo .env en la raíz con las siguientes variables:
 
+env
+Copiar
+Editar
 USERNAME=tu_usuario_en_prenotami
 PASSWORD=tu_contraseña_en_prenotami
 TELEGRAM_TOKEN=token_de_tu_bot_telegram
 TELEGRAM_CHAT_ID=tu_chat_id_telegram
-
 Si no querés usar Telegram, podés dejar vacíos los valores TELEGRAM_TOKEN y TELEGRAM_CHAT_ID y el script solo imprimirá mensajes en consola.
 
----
-
-## Uso
+Uso
 Ejecutar el script:
 
+bash
+Copiar
+Editar
 python main.py
 El script hará chequeos periódicos en intervalos aleatorios (entre 8 y 20 minutos) para no parecer un bot y notificará cuando haya disponibilidad de turnos.
 
----
-
-## Despliegue en Render (opcional)
+Despliegue en Render (opcional)
 Para automatizar y dejar corriendo el script en la nube:
 
 Crear un nuevo Cron Job en Render configurado para ejecutarse cada 10 minutos (o el intervalo que prefieras).
@@ -70,14 +71,10 @@ Configurar las variables de entorno en Render (igual que en .env).
 
 Render ejecutará el script automáticamente y te avisará si detecta turnos disponibles.
 
----
-
-## Seguridad
+Seguridad
 No subir el archivo .env con credenciales reales al repositorio.
 
 Usar .env.example como plantilla para compartir configuración sin datos sensibles.
 
----
-
-## Contribuciones
+Contribuciones
 Bienvenidas! Abrí un issue o PR si querés mejorar algo.
