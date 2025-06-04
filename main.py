@@ -2,8 +2,9 @@ import os
 import smtplib
 from email.message import EmailMessage
 from playwright.sync_api import sync_playwright
+import time
 
-# Credenciales y destinatario desde variables de entorno
+# Cargar variables de entorno
 EMAIL_ADDRESS = os.environ.get("GMAIL_USER")
 EMAIL_PASSWORD = os.environ.get("GMAIL_PASS")
 TO_EMAIL = os.environ.get("ALERT_EMAIL")
@@ -28,19 +29,15 @@ def revisar_turnos():
         page = context.new_page()
 
         page.goto("https://prenotami.esteri.it/")
-
-        # Iniciar sesión
         page.click("text=Accedi")
         page.fill("#login-email", PRENOTAMI_USER)
         page.fill("#login-password", PRENOTAMI_PASS)
         page.click("button[type=submit]")
-        page.wait_for_timeout(3000)  # esperar un poco
+        page.wait_for_timeout(3000)
 
-        # Ir a /Services/Booking/224
         page.goto("https://prenotami.esteri.it/Services/Booking/224")
         page.wait_for_timeout(3000)
 
-        # Verificar si hay turnos disponibles
         texto_pagina = page.content()
         if any(msg in texto_pagina for msg in [
             "Stante l'elevata richiesta",
@@ -55,4 +52,11 @@ def revisar_turnos():
         browser.close()
 
 if __name__ == "__main__":
-    revisar_turnos()
+    while True:
+        print("🔁 Revisión iniciada")
+        try:
+            revisar_turnos()
+        except Exception as e:
+            print(f"⚠️ Error durante la ejecución: {e}")
+        print("⏳ Esperando 17 minutos para la próxima revisión...")
+        time.sleep(17 * 60)
