@@ -12,7 +12,7 @@ Este proyecto es un script en Python que utiliza Playwright para conectarse a [p
 
 ---
 
-## Instalación
+### Instalación
 
 1. Clonar el repositorio:
 
@@ -38,7 +38,7 @@ playwright install
 
 ---
 
-## Configuración
+### Configuración
 
 Crear un archivo .env en la raíz con las siguientes variables:
 
