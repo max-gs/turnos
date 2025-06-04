@@ -85,7 +85,7 @@ async def main():
 
         wait_time = random.randint(8*60, 20*60)
         print(f"Esperando {wait_time // 60} minutos para el próximo chequeo...")
-        time.sleep(wait_time)
+        await asyncio.sleep(wait_time)  # <-- Aquí el cambio
 
 if __name__ == "__main__":
     asyncio.run(main())
