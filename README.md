@@ -38,7 +38,7 @@ playwright install
 
 
 
-Configuración
+## Configuración
 Crear un archivo .env en la raíz con las siguientes variables:
 
 USERNAME=tu_usuario_en_prenotami
@@ -50,7 +50,7 @@ Si no querés usar Telegram, podés dejar vacíos los valores TELEGRAM_TOKEN y T
 
 
 
-Uso
+## Uso
 Ejecutar el script:
 
 python main.py
@@ -58,7 +58,7 @@ El script hará chequeos periódicos en intervalos aleatorios (entre 8 y 20 minu
 
 
 
-Despliegue en Render (opcional)
+## Despliegue en Render (opcional)
 Para automatizar y dejar corriendo el script en la nube:
 
 Crear un nuevo Cron Job en Render configurado para ejecutarse cada 10 minutos (o el intervalo que prefieras).
@@ -69,10 +69,10 @@ Configurar las variables de entorno en Render (igual que en .env).
 
 Render ejecutará el script automáticamente y te avisará si detecta turnos disponibles.
 
-Seguridad
+## Seguridad
 No subir el archivo .env con credenciales reales al repositorio.
 
 Usar .env.example como plantilla para compartir configuración sin datos sensibles.
 
-Contribuciones
+## Contribuciones
 Bienvenidas! Abrí un issue o PR si querés mejorar algo.
