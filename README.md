@@ -2,79 +2,58 @@
 
 Este proyecto es un script en Python que utiliza Playwright para conectarse a [prenotami.esteri.it](https://prenotami.esteri.it/), hacer login y revisar la disponibilidad de turnos para "reconstrucción de ciudadanía". Cuando hay turnos disponibles, te envía una notificación por Telegram.
 
----
-
 ## Requisitos
 
-- Python 3.9+ instalado
-- Cuenta en prenotami.esteri.it
-- Bot de Telegram y chat ID para recibir notificaciones (opcional pero recomendado)
+- Python 3.9+ instalado  
+- Cuenta en prenotami.esteri.it  
+- Bot de Telegram y chat ID para recibir notificaciones (opcional pero recomendado)  
 
----
 
 ## Instalación
 
-1. Clonar el repositorio:
+Clonar el repositorio con `git clone https://github.com/max-gs/turnos.git` 
 
-```bash
-git clone https://github.com/max-gs/turnos.git
-cd turnos
-Crear un entorno virtual (opcional pero recomendado):
+y entrar en la carpeta con `cd turnos`. C
 
-bash
-Copiar
-Editar
-python -m venv venv
-source venv/bin/activate  # Linux/macOS
-venv\Scripts\activate     # Windows
-Instalar dependencias:
+rear un entorno virtual (opcional pero recomendado) con `python -m venv venv` 
 
-bash
-Copiar
-Editar
-pip install -r requirements.txt
-Instalar navegadores para Playwright (solo la primera vez):
+y activarlo (`source venv/bin/activate` en Linux/macOS o `venv\Scripts\activate` en Windows). 
 
-bash
-Copiar
-Editar
-playwright install
-Configuración
-Crear un archivo .env en la raíz con las siguientes variables:
+Instalar las dependencias con `pip install -r requirements.txt`.
 
-env
-Copiar
-Editar
-USERNAME=tu_usuario_en_prenotami
-PASSWORD=tu_contraseña_en_prenotami
-TELEGRAM_TOKEN=token_de_tu_bot_telegram
-TELEGRAM_CHAT_ID=tu_chat_id_telegram
-Si no querés usar Telegram, podés dejar vacíos los valores TELEGRAM_TOKEN y TELEGRAM_CHAT_ID y el script solo imprimirá mensajes en consola.
+Luego instalar los navegadores para Playwright (solo la primera vez): `playwright install`
 
-Uso
-Ejecutar el script:
 
-bash
-Copiar
-Editar
-python main.py
-El script hará chequeos periódicos en intervalos aleatorios (entre 8 y 20 minutos) para no parecer un bot y notificará cuando haya disponibilidad de turnos.
+## Configuración
 
-Despliegue en Render (opcional)
-Para automatizar y dejar corriendo el script en la nube:
+Crear un archivo `.env` en la raíz del proyecto con las variables de entorno:
 
-Crear un nuevo Cron Job en Render configurado para ejecutarse cada 10 minutos (o el intervalo que prefieras).
+```
+  USERNAME=tu_usuario_en_prenotami
+  PASSWORD=tu_contraseña_en_prenotami
+  TELEGRAM_TOKEN=token_de_tu_bot_telegram
+  TELEGRAM_CHAT_ID=tu_chat_id_telegram
+```
 
-Subir este repositorio a GitHub y conectarlo a Render.
+Si no querés usar Telegram, podés dejar vacíos `TELEGRAM_TOKEN` y `TELEGRAM_CHAT_ID` y el script solo mostrará mensajes en consola.
 
-Configurar las variables de entorno en Render (igual que en .env).
+## Uso
 
-Render ejecutará el script automáticamente y te avisará si detecta turnos disponibles.
+Ejecutar el script con `python main.py`. El script revisará la disponibilidad de turnos en intervalos aleatorios entre 8 y 20 minutos para simular un comportamiento humano y te avisará por Telegram cuando haya turnos disponibles.
 
-Seguridad
-No subir el archivo .env con credenciales reales al repositorio.
+## Despliegue en Render (opcional)
 
-Usar .env.example como plantilla para compartir configuración sin datos sensibles.
+Podés automatizar la ejecución creando un **Cron Job** en Render configurado para ejecutarse cada 10 minutos (o el intervalo que prefieras). Subí tu repositorio a GitHub y conéctalo a Render. Configurá las variables de entorno en Render igual que en tu archivo `.env`. Así el script se ejecutará automáticamente en la nube y te avisará cuando detecte turnos disponibles.
 
-Contribuciones
-Bienvenidas! Abrí un issue o PR si querés mejorar algo.
+## Seguridad
+
+No subas tu archivo `.env` con credenciales reales al repositorio. Usá un `.env.example` para compartir configuración sin datos sensibles.
+
+## Contribuciones
+
+¡Bienvenidas! Abrí un issue o PR si querés mejorar algo.
+
+## Licencia
+MIT License
+
+Copialo así nomás a tu archivo README.md y debería verse perfecto. ¿Querés que te ayude a hacer el commit directo desde acá?
