@@ -3,13 +3,17 @@ import smtplib
 from email.message import EmailMessage
 from playwright.sync_api import sync_playwright
 import time
+import threading
+from flask import Flask
 
-# Cargar variables de entorno
+# Variables de entorno
 EMAIL_ADDRESS = os.environ.get("GMAIL_USER")
 EMAIL_PASSWORD = os.environ.get("GMAIL_PASS")
 TO_EMAIL = os.environ.get("ALERT_EMAIL")
 PRENOTAMI_USER = os.environ.get("PRENOTAMI_USER")
 PRENOTAMI_PASS = os.environ.get("PRENOTAMI_PASS")
+
+app = Flask(__name__)
 
 def enviar_alerta():
     msg = EmailMessage()
@@ -51,7 +55,7 @@ def revisar_turnos():
 
         browser.close()
 
-if __name__ == "__main__":
+def tarea_periodica():
     while True:
         print("🔁 Revisión iniciada")
         try:
@@ -60,3 +64,16 @@ if __name__ == "__main__":
             print(f"⚠️ Error durante la ejecución: {e}")
         print("⏳ Esperando 17 minutos para la próxima revisión...")
         time.sleep(17 * 60)
+
+@app.route("/")
+def home():
+    return "El servicio está corriendo."
+
+if __name__ == "__main__":
+    # Lanzar la tarea periódica en un hilo aparte
+    hilo = threading.Thread(target=tarea_periodica, daemon=True)
+    hilo.start()
+
+    # Iniciar el servidor Flask en el puerto asignado por Render
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
