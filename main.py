@@ -5,6 +5,10 @@ from playwright.sync_api import sync_playwright
 import time
 import threading
 from flask import Flask
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logging.info("✅ main.py fue ejecutado correctamente.")
 
 # Variables de entorno
 EMAIL_ADDRESS = os.environ.get("GMAIL_USER")
