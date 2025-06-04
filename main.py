@@ -71,7 +71,9 @@ def tarea_periodica():
 
 @app.route("/")
 def home():
-    return "El servicio está corriendo."
+    logging.info("🏠 Se accedió a la ruta principal (/)")
+    return "¡Bienvenido a la app Flask desplegada con Gunicorn!"
+
 
 if __name__ == "__main__":
     # Lanzar la tarea periódica en un hilo aparte
