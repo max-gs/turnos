@@ -1,8 +1,8 @@
 services:
-  - type: cron
-    name: turnos-prenotami
+  - type: web
+    name: prenotami-checker
     runtime: python
-    schedule: "*/17 * * * *"
+    plan: free
     buildCommand: |
       pip install -r requirements.txt
       playwright install --with-deps
@@ -15,6 +15,6 @@ services:
       - key: ALERT_EMAIL
         value: destinatario@gmail.com
       - key: PRENOTAMI_USER
-        value: tu-usuario-prenotami
+        value: tu-mail-prenotami
       - key: PRENOTAMI_PASS
         value: tu-password-prenotami
