@@ -36,7 +36,7 @@ pip install -r requirements.txt
 
 playwright install
 
-
+---
 
 ## Configuración
 Crear un archivo .env en la raíz con las siguientes variables:
@@ -48,7 +48,7 @@ TELEGRAM_CHAT_ID=tu_chat_id_telegram
 
 Si no querés usar Telegram, podés dejar vacíos los valores TELEGRAM_TOKEN y TELEGRAM_CHAT_ID y el script solo imprimirá mensajes en consola.
 
-
+---
 
 ## Uso
 Ejecutar el script:
@@ -56,7 +56,7 @@ Ejecutar el script:
 python main.py
 El script hará chequeos periódicos en intervalos aleatorios (entre 8 y 20 minutos) para no parecer un bot y notificará cuando haya disponibilidad de turnos.
 
-
+---
 
 ## Despliegue en Render (opcional)
 Para automatizar y dejar corriendo el script en la nube:
@@ -69,10 +69,14 @@ Configurar las variables de entorno en Render (igual que en .env).
 
 Render ejecutará el script automáticamente y te avisará si detecta turnos disponibles.
 
+---
+
 ## Seguridad
 No subir el archivo .env con credenciales reales al repositorio.
 
 Usar .env.example como plantilla para compartir configuración sin datos sensibles.
+
+---
 
 ## Contribuciones
 Bienvenidas! Abrí un issue o PR si querés mejorar algo.
